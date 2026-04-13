@@ -7,7 +7,7 @@ const Listening: React.FC = () => {
       id: 1,
       title: '数据分析基础概念',
       audioUrl: 'https://example.com/audio1.mp3',
-      transcript: 'Data analysis is the process of inspecting, cleaning, transforming, and modeling data to discover useful information, inform conclusions, and support decision-making.',
+      transcript: 'Data analysis is the process of inspecting, cleaning, transforming, and modeling data to discover useful information, inform conclusions, and support decision-making. It involves various techniques and methods to extract meaningful insights from data, which can help businesses make informed decisions.',
       questions: [
         {
           question: 'What is data analysis?',
@@ -25,7 +25,7 @@ const Listening: React.FC = () => {
       id: 2,
       title: 'Python数据分析介绍',
       audioUrl: 'https://example.com/audio2.mp3',
-      transcript: 'Python is a popular programming language for data analysis. It offers powerful libraries like NumPy for numerical computing, Pandas for data manipulation, and Matplotlib for data visualization. These tools make it easier to analyze and interpret complex data sets.',
+      transcript: 'Python is a popular programming language for data analysis. It offers powerful libraries like NumPy for numerical computing, Pandas for data manipulation, Matplotlib for data visualization, and Scikit-learn for machine learning. These tools make it easier to analyze and interpret complex data sets, and they are widely used in various industries.',
       questions: [
         {
           question: 'Which library is used for numerical computing in Python?',
@@ -33,9 +33,9 @@ const Listening: React.FC = () => {
           correctAnswer: 1
         },
         {
-          question: 'Which library is used for data manipulation in Python?',
+          question: 'Which library is used for machine learning in Python?',
           options: ['NumPy', 'Matplotlib', 'Pandas', 'Scikit-learn'],
-          correctAnswer: 2
+          correctAnswer: 3
         }
       ]
     },
@@ -43,7 +43,7 @@ const Listening: React.FC = () => {
       id: 3,
       title: 'Pandas数据处理',
       audioUrl: 'https://example.com/audio3.mp3',
-      transcript: 'Pandas is a powerful library for data manipulation and analysis. It provides data structures like DataFrames and Series, which make it easy to work with structured data. With Pandas, you can clean data, transform it, and perform various operations like grouping and aggregation.',
+      transcript: 'Pandas is a powerful library for data manipulation and analysis. It provides data structures like DataFrames and Series, which make it easy to work with structured data. With Pandas, you can clean data, transform it, perform various operations like grouping and aggregation, and handle missing values. It is one of the most widely used libraries for data analysis in Python.',
       questions: [
         {
           question: 'What data structures does Pandas provide?',
@@ -61,7 +61,7 @@ const Listening: React.FC = () => {
       id: 4,
       title: '数据可视化的重要性',
       audioUrl: 'https://example.com/audio4.mp3',
-      transcript: 'Data visualization is important because it helps people understand complex data more easily. It allows analysts to identify patterns, trends, and outliers that might not be apparent in raw data. Libraries like Matplotlib and Seaborn make it easy to create professional-looking visualizations in Python.',
+      transcript: 'Data visualization is important because it helps people understand complex data more easily. It allows analysts to identify patterns, trends, and outliers that might not be apparent in raw data. Libraries like Matplotlib and Seaborn make it easy to create professional-looking visualizations in Python, which can effectively communicate insights to stakeholders.',
       questions: [
         {
           question: 'Why is data visualization important?',
@@ -72,6 +72,42 @@ const Listening: React.FC = () => {
           question: 'Which libraries are used for data visualization in Python?',
           options: ['NumPy and Pandas', 'Matplotlib and Seaborn', 'Scikit-learn and TensorFlow', 'Requests and BeautifulSoup'],
           correctAnswer: 1
+        }
+      ]
+    },
+    {
+      id: 5,
+      title: '机器学习入门',
+      audioUrl: 'https://example.com/audio5.mp3',
+      transcript: 'Machine learning is a subset of artificial intelligence that allows computers to learn from data without being explicitly programmed. It involves algorithms that can identify patterns in data and make predictions or decisions based on those patterns. In data analysis, machine learning techniques are used to build predictive models, classify data, and discover hidden patterns.',
+      questions: [
+        {
+          question: 'What is machine learning?',
+          options: ['A subset of artificial intelligence that allows computers to learn from data', 'A programming language for data analysis', 'A data visualization technique', 'A database management system'],
+          correctAnswer: 0
+        },
+        {
+          question: 'What are machine learning techniques used for in data analysis?',
+          options: ['Only data collection', 'Building predictive models and classifying data', 'Only data storage', 'Only data cleaning'],
+          correctAnswer: 1
+        }
+      ]
+    },
+    {
+      id: 6,
+      title: '商务数据分析',
+      audioUrl: 'https://example.com/audio6.mp3',
+      transcript: 'Business analytics involves using data analysis techniques to help businesses make better decisions. It includes analyzing sales data, customer behavior, market trends, and financial performance. Business analysts use tools like Excel, Power BI, and Python to analyze data and create reports and dashboards that provide insights into business performance.',
+      questions: [
+        {
+          question: 'What is business analytics?',
+          options: ['Using data analysis techniques to help businesses make better decisions', 'A type of machine learning', 'A data visualization tool', 'A database management system'],
+          correctAnswer: 0
+        },
+        {
+          question: 'What tools do business analysts use?',
+          options: ['Only Excel', 'Only Power BI', 'Excel, Power BI, and Python', 'Only Python'],
+          correctAnswer: 2
         }
       ]
     }

@@ -1,6 +1,47 @@
 import React from 'react';
+import { Link, useParams } from 'react-router-dom';
+import { courses } from '../services/recommendationService';
 
 const CourseDetail: React.FC = () => {
+  const { id } = useParams<{ id: string }>();
+  const course = courses.find(c => c.id === id);
+  
+  // 如果课程不存在，显示404
+  if (!course) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">课程不存在</h1>
+          <p className="text-lg text-gray-500 mb-6">抱歉，您访问的课程不存在或已被删除</p>
+          <Link
+            to="/courses"
+            className="px-6 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          >
+            返回课程中心
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  const getLevelText = (level: string) => {
+    switch (level) {
+      case 'beginner': return '初级';
+      case 'intermediate': return '中级';
+      case 'advanced': return '高级';
+      default: return '初级';
+    }
+  };
+
+  const getLevelColor = (level: string) => {
+    switch (level) {
+      case 'beginner': return 'bg-blue-100 text-blue-800';
+      case 'intermediate': return 'bg-yellow-100 text-yellow-800';
+      case 'advanced': return 'bg-red-100 text-red-800';
+      default: return 'bg-blue-100 text-blue-800';
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* 导航栏 */}
@@ -52,25 +93,28 @@ const CourseDetail: React.FC = () => {
                 </div>
               </div>
               <div className="ml-4 flex-1">
-                <h2 className="text-2xl font-bold text-gray-900">数据分析基础</h2>
+                <h2 className="text-2xl font-bold text-gray-900">{course.title}</h2>
                 <div className="mt-2 flex items-center space-x-2">
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                    初级
+                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getLevelColor(course.level)}`}>
+                    {getLevelText(course.level)}
                   </span>
                   <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                    中文
+                    {course.category}
                   </span>
                   <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                    10小时
+                    {course.estimatedTime}小时
                   </span>
                 </div>
                 <p className="mt-4 text-gray-600">
-                  本课程旨在为学习者提供数据分析的基础知识和技能，包括数据收集、数据清洗、数据可视化等核心概念。通过本课程的学习，您将能够掌握数据分析的基本方法和工具，为后续的高级课程打下坚实的基础。
+                  {course.description}
                 </p>
                 <div className="mt-6 flex items-center space-x-4">
-                  <button className="px-6 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                  <Link
+                    to={`/courses/${id}/learn`}
+                    className="px-6 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                  >
                     开始学习
-                  </button>
+                  </Link>
                   <button className="px-6 py-2 border border-gray-300 text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                     加入收藏
                   </button>
@@ -90,101 +134,90 @@ const CourseDetail: React.FC = () => {
           <div className="border-t border-gray-200">
             <div className="px-4 py-4 sm:px-6">
               <div className="space-y-4">
-                {/* 章节 1 */}
+                {/* 通用课程结构 */}
                 <div>
                   <div className="flex items-center justify-between">
                     <h4 className="text-base font-medium text-gray-900">
-                      第一章：数据分析概述
+                      第一章：课程介绍
                     </h4>
                     <span className="text-sm text-gray-500">
-                      2小时
+                      1小时
                     </span>
                   </div>
                   <div className="mt-2 pl-4 border-l-2 border-gray-200 space-y-2">
                     <div className="flex items-center justify-between">
-                      <p className="text-sm text-gray-600">1.1 数据分析的定义和重要性</p>
-                      <span className="text-xs text-green-600">已完成</span>
+                      <p className="text-sm text-gray-600">1.1 课程概述</p>
+                      <span className="text-xs text-gray-400">未开始</span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <p className="text-sm text-gray-600">1.2 数据分析的流程</p>
-                      <span className="text-xs text-green-600">已完成</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <p className="text-sm text-gray-600">1.3 数据分析的工具和技术</p>
-                      <span className="text-xs text-green-600">已完成</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* 章节 2 */}
-                <div>
-                  <div className="flex items-center justify-between">
-                    <h4 className="text-base font-medium text-gray-900">
-                      第二章：数据收集与清洗
-                    </h4>
-                    <span className="text-sm text-gray-500">
-                      3小时
-                    </span>
-                  </div>
-                  <div className="mt-2 pl-4 border-l-2 border-gray-200 space-y-2">
-                    <div className="flex items-center justify-between">
-                      <p className="text-sm text-gray-600">2.1 数据收集的方法</p>
-                      <span className="text-xs text-green-600">已完成</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <p className="text-sm text-gray-600">2.2 数据清洗的步骤</p>
-                      <span className="text-xs text-yellow-600">进行中</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <p className="text-sm text-gray-600">2.3 数据质量评估</p>
+                      <p className="text-sm text-gray-600">1.2 学习目标</p>
                       <span className="text-xs text-gray-400">未开始</span>
                     </div>
                   </div>
                 </div>
 
-                {/* 章节 3 */}
                 <div>
                   <div className="flex items-center justify-between">
                     <h4 className="text-base font-medium text-gray-900">
-                      第三章：数据可视化
+                      第二章：核心内容
                     </h4>
                     <span className="text-sm text-gray-500">
-                      3小时
+                      {Math.floor(course.estimatedTime * 0.7)}小时
                     </span>
                   </div>
                   <div className="mt-2 pl-4 border-l-2 border-gray-200 space-y-2">
                     <div className="flex items-center justify-between">
-                      <p className="text-sm text-gray-600">3.1 数据可视化的原则</p>
+                      <p className="text-sm text-gray-600">2.1 基础概念</p>
                       <span className="text-xs text-gray-400">未开始</span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <p className="text-sm text-gray-600">3.2 常用数据可视化工具</p>
+                      <p className="text-sm text-gray-600">2.2 技术原理</p>
                       <span className="text-xs text-gray-400">未开始</span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <p className="text-sm text-gray-600">3.3 数据可视化最佳实践</p>
+                      <p className="text-sm text-gray-600">2.3 实践应用</p>
                       <span className="text-xs text-gray-400">未开始</span>
                     </div>
                   </div>
                 </div>
 
-                {/* 章节 4 */}
                 <div>
                   <div className="flex items-center justify-between">
                     <h4 className="text-base font-medium text-gray-900">
-                      第四章：数据分析案例
+                      第三章：实践项目
                     </h4>
                     <span className="text-sm text-gray-500">
-                      2小时
+                      {Math.floor(course.estimatedTime * 0.2)}小时
                     </span>
                   </div>
                   <div className="mt-2 pl-4 border-l-2 border-gray-200 space-y-2">
                     <div className="flex items-center justify-between">
-                      <p className="text-sm text-gray-600">4.1 销售数据分析案例</p>
+                      <p className="text-sm text-gray-600">3.1 项目概述</p>
                       <span className="text-xs text-gray-400">未开始</span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <p className="text-sm text-gray-600">4.2 用户行为分析案例</p>
+                      <p className="text-sm text-gray-600">3.2 项目实现</p>
+                      <span className="text-xs text-gray-400">未开始</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <div className="flex items-center justify-between">
+                    <h4 className="text-base font-medium text-gray-900">
+                      第四章：总结与评估
+                    </h4>
+                    <span className="text-sm text-gray-500">
+                      {Math.floor(course.estimatedTime * 0.1)}小时
+                    </span>
+                  </div>
+                  <div className="mt-2 pl-4 border-l-2 border-gray-200 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <p className="text-sm text-gray-600">4.1 课程总结</p>
+                      <span className="text-xs text-gray-400">未开始</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <p className="text-sm text-gray-600">4.2 评估测试</p>
                       <span className="text-xs text-gray-400">未开始</span>
                     </div>
                   </div>

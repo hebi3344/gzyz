@@ -18,8 +18,8 @@ export interface LearningPath {
   completed: boolean;
 }
 
-// 模拟课程数据
-const courses: Course[] = [
+// 导出课程数据
+export const courses: Course[] = [
   // 基础阶段课程
   {
     id: '1',
@@ -44,6 +44,22 @@ const courses: Course[] = [
     level: 'beginner',
     estimatedTime: 15,
     category: '编程'
+  },
+  {
+    id: '13',
+    title: '数据收集与预处理',
+    description: '学习数据收集的方法和数据预处理的技术，确保数据质量',
+    level: 'beginner',
+    estimatedTime: 10,
+    category: '基础'
+  },
+  {
+    id: '14',
+    title: 'Excel数据分析',
+    description: '学习使用Excel进行基础数据分析，掌握常用函数和图表制作',
+    level: 'beginner',
+    estimatedTime: 8,
+    category: '工具'
   },
   
   // 进阶阶段课程
@@ -87,6 +103,22 @@ const courses: Course[] = [
     estimatedTime: 14,
     category: '可视化'
   },
+  {
+    id: '15',
+    title: '数据挖掘基础',
+    description: '学习数据挖掘的基本概念和方法，发现数据中的模式和规律',
+    level: 'intermediate',
+    estimatedTime: 16,
+    category: '数据挖掘'
+  },
+  {
+    id: '16',
+    title: 'SQL数据库查询',
+    description: '学习使用SQL语言查询和分析数据库中的数据',
+    level: 'intermediate',
+    estimatedTime: 12,
+    category: '数据库'
+  },
   
   // 高级阶段课程
   {
@@ -120,6 +152,30 @@ const courses: Course[] = [
     level: 'advanced',
     estimatedTime: 18,
     category: '统计'
+  },
+  {
+    id: '17',
+    title: '高级数据可视化',
+    description: '学习创建交互式数据可视化，提升数据展示效果',
+    level: 'advanced',
+    estimatedTime: 16,
+    category: '可视化'
+  },
+  {
+    id: '18',
+    title: '大数据分析',
+    description: '学习处理和分析大规模数据的方法和工具',
+    level: 'advanced',
+    estimatedTime: 20,
+    category: '大数据'
+  },
+  {
+    id: '19',
+    title: '商务智能与报表',
+    description: '学习创建商务智能报表和仪表板，支持业务决策',
+    level: 'advanced',
+    estimatedTime: 18,
+    category: '商务智能'
   }
 ];
 

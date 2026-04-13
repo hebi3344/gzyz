@@ -5,11 +5,13 @@ import { Register } from "./components/Auth/Register";
 import Home from "@/pages/Home";
 import Courses from "@/pages/Courses";
 import CourseDetail from "@/pages/CourseDetail";
+import LessonContent from "@/pages/LessonContent";
 import Learning from "@/pages/Learning";
 import WordMemory from "@/pages/learning/WordMemory";
 import Grammar from "@/pages/learning/Grammar";
 import Speaking from "@/pages/learning/Speaking";
 import Listening from "@/pages/learning/Listening";
+import Assessment from "@/pages/learning/Assessment";
 import Profile from "@/pages/Profile";
 import Community from "@/pages/Community";
 import { isSupabaseConfigured } from "./lib/supabase";
@@ -48,11 +50,13 @@ export default function App() {
           <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
           <Route path="/courses" element={<ProtectedRoute><Courses /></ProtectedRoute>} />
           <Route path="/courses/:id" element={<ProtectedRoute><CourseDetail /></ProtectedRoute>} />
+          <Route path="/courses/:courseId/learn" element={<ProtectedRoute><LessonContent /></ProtectedRoute>} />
           <Route path="/learning" element={<ProtectedRoute><Learning /></ProtectedRoute>} />
           <Route path="/learning/word-memory" element={<ProtectedRoute><WordMemory /></ProtectedRoute>} />
           <Route path="/learning/grammar" element={<ProtectedRoute><Grammar /></ProtectedRoute>} />
           <Route path="/learning/speaking" element={<ProtectedRoute><Speaking /></ProtectedRoute>} />
           <Route path="/learning/listening" element={<ProtectedRoute><Listening /></ProtectedRoute>} />
+          <Route path="/learning/assessment/:id" element={<ProtectedRoute><Assessment /></ProtectedRoute>} />
           <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
           <Route path="/community" element={<ProtectedRoute><Community /></ProtectedRoute>} />
         </Routes>

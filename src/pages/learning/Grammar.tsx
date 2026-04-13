@@ -36,41 +36,105 @@ const Grammar: React.FC = () => {
       options: ['group()', 'groupby()', 'aggregate()', 'split()'],
       correctAnswer: 1
     },
+    {
+      id: 6,
+      question: 'Which method is used to handle missing values in pandas?',
+      options: ['drop_na()', 'fill_na()', 'handle_missing()', 'clean_data()'],
+      correctAnswer: 1
+    },
+    {
+      id: 7,
+      question: 'What does the describe() method do in pandas?',
+      options: ['Returns a summary of statistics', 'Returns the number of rows and columns', 'Returns the data types of each column', 'Returns the missing values count'],
+      correctAnswer: 0
+    },
     
     // NumPy操作
     {
-      id: 6,
+      id: 8,
       question: 'Which function is used to create an array in NumPy?',
       options: ['array()', 'create_array()', 'numpy_array()', 'make_array()'],
       correctAnswer: 0
     },
     {
-      id: 7,
+      id: 9,
       question: 'What does np.mean() calculate?',
       options: ['Median', 'Mean', 'Mode', 'Standard deviation'],
       correctAnswer: 1
     },
+    {
+      id: 10,
+      question: 'Which function is used to create a zeros array in NumPy?',
+      options: ['zeros()', 'empty()', 'ones()', 'full()'],
+      correctAnswer: 0
+    },
     
     // 数据可视化
     {
-      id: 8,
+      id: 11,
       question: 'Which method is used to create a data visualization in matplotlib?',
       options: ['plot()', 'chart()', 'graph()', 'visualize()'],
       correctAnswer: 0
     },
     {
-      id: 9,
+      id: 12,
       question: 'Which library is built on top of Matplotlib and provides more aesthetically pleasing visualizations?',
       options: ['NumPy', 'Pandas', 'Seaborn', 'Scikit-learn'],
       correctAnswer: 2
     },
+    {
+      id: 13,
+      question: 'Which type of plot is best for showing the relationship between two variables?',
+      options: ['Bar plot', 'Scatter plot', 'Histogram', 'Line plot'],
+      correctAnswer: 1
+    },
+    
+    // 机器学习
+    {
+      id: 14,
+      question: 'Which library is used for machine learning in Python?',
+      options: ['NumPy', 'Pandas', 'Matplotlib', 'Scikit-learn'],
+      correctAnswer: 3
+    },
+    {
+      id: 15,
+      question: 'What is the purpose of train_test_split in Scikit-learn?',
+      options: ['To split data into training and testing sets', 'To train the model', 'To evaluate the model', 'To preprocess data'],
+      correctAnswer: 0
+    },
     
     // 数据处理
     {
-      id: 10,
-      question: 'Which method is used to handle missing values in pandas?',
-      options: ['drop_na()', 'fill_na()', 'handle_missing()', 'clean_data()'],
-      correctAnswer: 1
+      id: 16,
+      question: 'What is data preprocessing?',
+      options: ['The process of cleaning and transforming data', 'The process of collecting data', 'The process of visualizing data', 'The process of analyzing data'],
+      correctAnswer: 0
+    },
+    {
+      id: 17,
+      question: 'Which technique is used to handle categorical data?',
+      options: ['Standardization', 'Normalization', 'One-hot encoding', 'Feature scaling'],
+      correctAnswer: 2
+    },
+    
+    // 商务数据分析
+    {
+      id: 18,
+      question: 'What is a KPI?',
+      options: ['Key Performance Indicator', 'Knowledge Processing Interface', 'Key Process Improvement', 'Knowledge Performance Index'],
+      correctAnswer: 0
+    },
+    {
+      id: 19,
+      question: 'Which tool is commonly used for creating business dashboards?',
+      options: ['Excel', 'Power BI', 'Tableau', 'All of the above'],
+      correctAnswer: 3
+    },
+    {
+      id: 20,
+      question: 'What is the purpose of data visualization in business?',
+      options: ['To make data more confusing', 'To hide important insights', 'To communicate insights effectively', 'To store data'],
+      correctAnswer: 2
     }
   ];
 
