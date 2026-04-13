@@ -3,14 +3,27 @@ import React, { useState, useEffect } from 'react';
 const WordMemory: React.FC = () => {
   // 模拟单词数据
   const words = [
+    // 基础术语
     { id: 1, word: 'data analysis', meaning: '数据分析' },
     { id: 2, word: 'data visualization', meaning: '数据可视化' },
     { id: 3, word: 'statistical analysis', meaning: '统计分析' },
     { id: 4, word: 'machine learning', meaning: '机器学习' },
     { id: 5, word: 'business intelligence', meaning: '商业智能' },
-    { id: 6, word: 'data mining', meaning: '数据挖掘' },
-    { id: 7, word: 'predictive analytics', meaning: '预测分析' },
-    { id: 8, word: 'descriptive analytics', meaning: '描述性分析' },
+    
+    // Python相关术语
+    { id: 6, word: 'NumPy', meaning: 'Python数值计算库' },
+    { id: 7, word: 'Pandas', meaning: 'Python数据分析库' },
+    { id: 8, word: 'Matplotlib', meaning: 'Python数据可视化库' },
+    { id: 9, word: 'Seaborn', meaning: 'Python统计数据可视化库' },
+    { id: 10, word: 'DataFrame', meaning: 'Pandas中的数据结构' },
+    { id: 11, word: 'Series', meaning: 'Pandas中的一维数据结构' },
+    { id: 12, word: 'array', meaning: 'NumPy中的数组' },
+    { id: 13, word: 'data cleaning', meaning: '数据清洗' },
+    { id: 14, word: 'data transformation', meaning: '数据转换' },
+    { id: 15, word: 'data aggregation', meaning: '数据聚合' },
+    { id: 16, word: 'time series', meaning: '时间序列' },
+    { id: 17, word: 'correlation', meaning: '相关性' },
+    { id: 18, word: 'regression', meaning: '回归分析' },
   ];
 
   const [currentWordIndex, setCurrentWordIndex] = useState(0);

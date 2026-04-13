@@ -23,9 +23,45 @@ const Listening: React.FC = () => {
     },
     {
       id: 2,
-      title: '数据可视化的重要性',
+      title: 'Python数据分析介绍',
       audioUrl: 'https://example.com/audio2.mp3',
-      transcript: 'Data visualization is important because it helps people understand complex data more easily. It allows analysts to identify patterns, trends, and outliers that might not be apparent in raw data.',
+      transcript: 'Python is a popular programming language for data analysis. It offers powerful libraries like NumPy for numerical computing, Pandas for data manipulation, and Matplotlib for data visualization. These tools make it easier to analyze and interpret complex data sets.',
+      questions: [
+        {
+          question: 'Which library is used for numerical computing in Python?',
+          options: ['Pandas', 'NumPy', 'Matplotlib', 'Seaborn'],
+          correctAnswer: 1
+        },
+        {
+          question: 'Which library is used for data manipulation in Python?',
+          options: ['NumPy', 'Matplotlib', 'Pandas', 'Scikit-learn'],
+          correctAnswer: 2
+        }
+      ]
+    },
+    {
+      id: 3,
+      title: 'Pandas数据处理',
+      audioUrl: 'https://example.com/audio3.mp3',
+      transcript: 'Pandas is a powerful library for data manipulation and analysis. It provides data structures like DataFrames and Series, which make it easy to work with structured data. With Pandas, you can clean data, transform it, and perform various operations like grouping and aggregation.',
+      questions: [
+        {
+          question: 'What data structures does Pandas provide?',
+          options: ['Arrays and Lists', 'DataFrames and Series', 'Dictionaries and Tuples', 'Sets and Queues'],
+          correctAnswer: 1
+        },
+        {
+          question: 'What operations can you perform with Pandas?',
+          options: ['Only data cleaning', 'Only data visualization', 'Data cleaning, transformation, and aggregation', 'Only data storage'],
+          correctAnswer: 2
+        }
+      ]
+    },
+    {
+      id: 4,
+      title: '数据可视化的重要性',
+      audioUrl: 'https://example.com/audio4.mp3',
+      transcript: 'Data visualization is important because it helps people understand complex data more easily. It allows analysts to identify patterns, trends, and outliers that might not be apparent in raw data. Libraries like Matplotlib and Seaborn make it easy to create professional-looking visualizations in Python.',
       questions: [
         {
           question: 'Why is data visualization important?',
@@ -33,9 +69,9 @@ const Listening: React.FC = () => {
           correctAnswer: 1
         },
         {
-          question: 'What can data visualization help identify?',
-          options: ['Data collection methods', 'Storage solutions', 'Patterns, trends, and outliers', 'Data processing techniques'],
-          correctAnswer: 2
+          question: 'Which libraries are used for data visualization in Python?',
+          options: ['NumPy and Pandas', 'Matplotlib and Seaborn', 'Scikit-learn and TensorFlow', 'Requests and BeautifulSoup'],
+          correctAnswer: 1
         }
       ]
     }

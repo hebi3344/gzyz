@@ -20,6 +20,7 @@ export interface LearningPath {
 
 // 模拟课程数据
 const courses: Course[] = [
+  // 基础阶段课程
   {
     id: '1',
     title: '数据分析基础',
@@ -27,30 +28,6 @@ const courses: Course[] = [
     level: 'beginner',
     estimatedTime: 10,
     category: '基础'
-  },
-  {
-    id: '2',
-    title: '商务数据可视化',
-    description: '学习如何使用数据可视化工具展示商务数据，提升数据解读能力',
-    level: 'intermediate',
-    estimatedTime: 15,
-    category: '可视化'
-  },
-  {
-    id: '3',
-    title: '数据分析与决策',
-    description: '学习如何利用数据分析结果做出有效的商务决策',
-    level: 'advanced',
-    estimatedTime: 20,
-    category: '决策'
-  },
-  {
-    id: '4',
-    title: 'Python数据分析',
-    description: '学习使用Python进行数据分析，掌握常用的数据处理库',
-    level: 'intermediate',
-    estimatedTime: 18,
-    category: '编程'
   },
   {
     id: '5',
@@ -61,12 +38,88 @@ const courses: Course[] = [
     category: '统计'
   },
   {
+    id: '7',
+    title: 'Python编程基础',
+    description: '学习Python编程语言的基础知识，为数据分析做准备',
+    level: 'beginner',
+    estimatedTime: 15,
+    category: '编程'
+  },
+  
+  // 进阶阶段课程
+  {
+    id: '4',
+    title: 'Python数据分析',
+    description: '学习使用Python进行数据分析，掌握常用的数据处理库',
+    level: 'intermediate',
+    estimatedTime: 18,
+    category: '编程'
+  },
+  {
+    id: '8',
+    title: 'NumPy数据处理',
+    description: '学习使用NumPy库进行高效的数值计算和数组操作',
+    level: 'intermediate',
+    estimatedTime: 12,
+    category: '编程'
+  },
+  {
+    id: '9',
+    title: 'Pandas数据处理',
+    description: '学习使用Pandas库进行数据清洗、转换和分析',
+    level: 'intermediate',
+    estimatedTime: 15,
+    category: '编程'
+  },
+  {
+    id: '2',
+    title: '商务数据可视化',
+    description: '学习如何使用数据可视化工具展示商务数据，提升数据解读能力',
+    level: 'intermediate',
+    estimatedTime: 15,
+    category: '可视化'
+  },
+  {
+    id: '10',
+    title: 'Matplotlib与Seaborn',
+    description: '学习使用Matplotlib和Seaborn库创建专业的数据可视化图表',
+    level: 'intermediate',
+    estimatedTime: 14,
+    category: '可视化'
+  },
+  
+  // 高级阶段课程
+  {
+    id: '3',
+    title: '数据分析与决策',
+    description: '学习如何利用数据分析结果做出有效的商务决策',
+    level: 'advanced',
+    estimatedTime: 20,
+    category: '决策'
+  },
+  {
     id: '6',
     title: '机器学习入门',
     description: '学习机器学习的基本概念和算法，应用于数据分析',
     level: 'advanced',
     estimatedTime: 25,
     category: '机器学习'
+  },
+  {
+    id: '11',
+    title: 'Python数据分析项目实战',
+    description: '通过实际项目练习，综合运用Python数据分析技能解决真实问题',
+    level: 'advanced',
+    estimatedTime: 22,
+    category: '项目'
+  },
+  {
+    id: '12',
+    title: '时间序列分析',
+    description: '学习时间序列数据的分析方法和预测模型',
+    level: 'advanced',
+    estimatedTime: 18,
+    category: '统计'
   }
 ];
 

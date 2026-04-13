@@ -3,11 +3,23 @@ import React, { useState } from 'react';
 const Speaking: React.FC = () => {
   // 模拟口语练习数据
   const speakingExercises = [
+    // 基础术语
     { id: 1, phrase: 'data analysis', tip: '注意 "data" 的发音，重音在第一个音节' },
     { id: 2, phrase: 'machine learning', tip: '"machine" 和 "learning" 之间有连读' },
     { id: 3, phrase: 'business intelligence', tip: '注意 "intelligence" 的重音位置' },
     { id: 4, phrase: 'statistical analysis', tip: '"statistical" 有四个音节，注意发音节奏' },
     { id: 5, phrase: 'data visualization', tip: '"visualization" 是长单词，注意每个音节的发音' },
+    
+    // Python相关术语
+    { id: 6, phrase: 'Python programming', tip: '"Python" 的发音重音在第一个音节' },
+    { id: 7, phrase: 'NumPy array', tip: '"NumPy" 发音为 /ˈnʌmpaɪ/' },
+    { id: 8, phrase: 'Pandas DataFrame', tip: '"Pandas" 发音为 /ˈpændəs/' },
+    { id: 9, phrase: 'Matplotlib plot', tip: '"Matplotlib" 发音为 /mætˈplɒtlib/' },
+    { id: 10, phrase: 'Seaborn visualization', tip: '"Seaborn" 发音为 /ˈsiːbɔːrn/' },
+    { id: 11, phrase: 'data cleaning', tip: '注意 "cleaning" 的发音' },
+    { id: 12, phrase: 'data transformation', tip: '注意 "transformation" 的重音位置' },
+    { id: 13, phrase: 'time series analysis', tip: '注意短语间的连读' },
+    { id: 14, phrase: 'machine learning model', tip: '注意 "learning" 和 "model" 之间的连读' },
   ];
 
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);

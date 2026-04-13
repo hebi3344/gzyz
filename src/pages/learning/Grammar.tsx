@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 const Grammar: React.FC = () => {
   // 模拟语法练习数据
   const exercises = [
+    // Python基础语法
     {
       id: 1,
       question: 'Which Python library is used for data manipulation and analysis?',
@@ -15,6 +16,8 @@ const Grammar: React.FC = () => {
       options: ['import pandas', 'from pandas import *', 'import pandas as pd', 'import pandas.pyplot'],
       correctAnswer: 2
     },
+    
+    // Pandas操作
     {
       id: 3,
       question: 'Which function is used to read a CSV file in pandas?',
@@ -29,9 +32,45 @@ const Grammar: React.FC = () => {
     },
     {
       id: 5,
+      question: 'Which method is used to group data in pandas?',
+      options: ['group()', 'groupby()', 'aggregate()', 'split()'],
+      correctAnswer: 1
+    },
+    
+    // NumPy操作
+    {
+      id: 6,
+      question: 'Which function is used to create an array in NumPy?',
+      options: ['array()', 'create_array()', 'numpy_array()', 'make_array()'],
+      correctAnswer: 0
+    },
+    {
+      id: 7,
+      question: 'What does np.mean() calculate?',
+      options: ['Median', 'Mean', 'Mode', 'Standard deviation'],
+      correctAnswer: 1
+    },
+    
+    // 数据可视化
+    {
+      id: 8,
       question: 'Which method is used to create a data visualization in matplotlib?',
       options: ['plot()', 'chart()', 'graph()', 'visualize()'],
       correctAnswer: 0
+    },
+    {
+      id: 9,
+      question: 'Which library is built on top of Matplotlib and provides more aesthetically pleasing visualizations?',
+      options: ['NumPy', 'Pandas', 'Seaborn', 'Scikit-learn'],
+      correctAnswer: 2
+    },
+    
+    // 数据处理
+    {
+      id: 10,
+      question: 'Which method is used to handle missing values in pandas?',
+      options: ['drop_na()', 'fill_na()', 'handle_missing()', 'clean_data()'],
+      correctAnswer: 1
     }
   ];
 
