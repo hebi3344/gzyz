@@ -2,11 +2,11 @@
 export const supabase = {
   auth: {
     getSession: async () => ({ data: { session: null } }),
-    onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } }),
-    signUp: async () => ({ error: null }),
-    signInWithPassword: async () => ({ error: null }),
+    onAuthStateChange: (callback: any) => ({ data: { subscription: { unsubscribe: () => {} } } }),
+    signUp: async (credentials: any) => ({ error: null }),
+    signInWithPassword: async (credentials: any) => ({ error: null }),
     signOut: async () => ({ error: null }),
-    resetPasswordForEmail: async () => ({ error: null })
+    resetPasswordForEmail: async (email: string) => ({ error: null })
   }
 };
 

@@ -70,7 +70,7 @@ const Profile: React.FC = () => {
               </div>
               <div className="ml-4">
                 <h4 className="text-lg font-medium text-gray-900">
-                  {user?.user_metadata?.name || user?.email}
+                  {user?.email}
                 </h4>
                 <p className="text-sm text-gray-500">
                   {user?.email}
