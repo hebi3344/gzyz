@@ -1,8 +1,23 @@
 import React from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { useProgressStore } from '../store/useProgressStore';
+import { ProgressVisualization } from '../components/ProgressVisualization';
+import { Trophy, Clock, Award, TrendingUp, Zap } from 'lucide-react';
 
 const Profile: React.FC = () => {
   const { user, signOut } = useAuth();
+  const {
+    progress,
+    completedModules,
+    totalLearningTime,
+    unlockedAchievements,
+    achievements,
+    currentStreak
+  } = useProgressStore();
+
+  const completedCoursesCount = Object.values(progress).filter(p => p >= 100).length;
+  const totalAchievements = achievements.length;
+  const unlockedCount = unlockedAchievements.length;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -96,96 +111,125 @@ const Profile: React.FC = () => {
             </h3>
           </div>
           <div className="border-t border-gray-200 px-4 py-4 sm:px-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="bg-gray-50 p-4 rounded-md">
-                <h4 className="text-sm font-medium text-gray-500">总学习时长</h4>
-                <p className="mt-1 text-2xl font-semibold text-gray-900">45小时</p>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-lg">
+                <div className="flex items-center">
+                  <Clock className="h-8 w-8 text-blue-600 mr-3" />
+                  <div>
+                    <h4 className="text-sm font-medium text-blue-600">总学习时长</h4>
+                    <p className="mt-1 text-2xl font-bold text-blue-900">
+                      {Math.floor(totalLearningTime / 60)}小时 {(totalLearningTime % 60)}分钟
+                    </p>
+                  </div>
+                </div>
               </div>
-              <div className="bg-gray-50 p-4 rounded-md">
-                <h4 className="text-sm font-medium text-gray-500">已完成课程</h4>
-                <p className="mt-1 text-2xl font-semibold text-gray-900">2门</p>
+              <div className="bg-gradient-to-br from-green-50 to-green-100 p-4 rounded-lg">
+                <div className="flex items-center">
+                  <Award className="h-8 w-8 text-green-600 mr-3" />
+                  <div>
+                    <h4 className="text-sm font-medium text-green-600">已完成课程</h4>
+                    <p className="mt-1 text-2xl font-bold text-green-900">{completedCoursesCount}门</p>
+                  </div>
+                </div>
               </div>
-              <div className="bg-gray-50 p-4 rounded-md">
-                <h4 className="text-sm font-medium text-gray-500">获得成就</h4>
-                <p className="mt-1 text-2xl font-semibold text-gray-900">5个</p>
+              <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-4 rounded-lg">
+                <div className="flex items-center">
+                  <Trophy className="h-8 w-8 text-purple-600 mr-3" />
+                  <div>
+                    <h4 className="text-sm font-medium text-purple-600">获得成就</h4>
+                    <p className="mt-1 text-2xl font-bold text-purple-900">{unlockedCount}/{totalAchievements}个</p>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-gradient-to-br from-orange-50 to-orange-100 p-4 rounded-lg">
+                <div className="flex items-center">
+                  <Zap className="h-8 w-8 text-orange-600 mr-3" />
+                  <div>
+                    <h4 className="text-sm font-medium text-orange-600">学习连续</h4>
+                    <p className="mt-1 text-2xl font-bold text-orange-900">{currentStreak}天</p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* 个性化学习路径 */}
+        {/* 详细进度可视化 */}
         <div className="mt-10 bg-white shadow overflow-hidden sm:rounded-lg">
           <div className="px-4 py-5 sm:px-6">
             <h3 className="text-lg leading-6 font-medium text-gray-900">
-              个性化学习路径
+              学习进度详情
+            </h3>
+          </div>
+          <div className="border-t border-gray-200 px-4 py-6 sm:px-6">
+            <ProgressVisualization courseId="all" />
+          </div>
+        </div>
+
+        {/* 课程进度 */}
+        <div className="mt-10 bg-white shadow overflow-hidden sm:rounded-lg">
+          <div className="px-4 py-5 sm:px-6">
+            <h3 className="text-lg leading-6 font-medium text-gray-900">
+              课程进度概览
             </h3>
           </div>
           <div className="border-t border-gray-200 px-4 py-4 sm:px-6">
             <div className="space-y-4">
-              <div className="flex items-center">
-                <div className="flex-shrink-0 h-8 w-8 rounded-full bg-green-100 flex items-center justify-center">
-                  <svg className="h-4 w-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
+              {Object.entries(progress).length > 0 ? (
+                Object.entries(progress).map(([courseId, courseProgress]) => {
+                  const status = courseProgress >= 100 ? '已完成' : courseProgress > 0 ? '进行中' : '未开始';
+                  const statusColor = courseProgress >= 100 ? 'green' : courseProgress > 0 ? 'yellow' : 'gray';
+                  return (
+                    <div key={courseId} className="flex items-center">
+                      <div className={`flex-shrink-0 h-10 w-10 rounded-full flex items-center justify-center ${
+                        courseProgress >= 100
+                          ? 'bg-green-100'
+                          : courseProgress > 0
+                          ? 'bg-yellow-100'
+                          : 'bg-gray-100'
+                      }`}>
+                        {courseProgress >= 100 ? (
+                          <svg className="h-5 w-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                          </svg>
+                        ) : courseProgress > 0 ? (
+                          <svg className="h-5 w-5 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                        ) : (
+                          <svg className="h-5 w-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                        )}
+                      </div>
+                      <div className="ml-4 flex-1">
+                        <h4 className="text-sm font-medium text-gray-900">{courseId}</h4>
+                        <div className="mt-1 w-full bg-gray-200 rounded-full h-2.5">
+                          <div
+                            className={`h-2.5 rounded-full ${
+                              courseProgress >= 100
+                                ? 'bg-gradient-to-r from-green-400 to-green-500'
+                                : courseProgress > 0
+                                ? 'bg-gradient-to-r from-blue-400 to-blue-600'
+                                : 'bg-gray-300'
+                            }`}
+                            style={{ width: `${courseProgress}%` }}
+                          />
+                        </div>
+                      </div>
+                      <div className="ml-4">
+                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-${statusColor}-100 text-${statusColor}-800`}>
+                          {status}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })
+              ) : (
+                <div className="text-center py-8 text-gray-500">
+                  <p>暂无课程进度数据</p>
                 </div>
-                <div className="ml-4 flex-1">
-                  <h4 className="text-sm font-medium text-gray-900">数据分析基础</h4>
-                  <div className="mt-1 w-full bg-gray-200 rounded-full h-2.5">
-                    <div className="bg-blue-600 h-2.5 rounded-full" style={{ width: '100%' }}></div>
-                  </div>
-                </div>
-                <div className="ml-4 text-sm text-gray-500">
-                  已完成
-                </div>
-              </div>
-              <div className="flex items-center">
-                <div className="flex-shrink-0 h-8 w-8 rounded-full bg-yellow-100 flex items-center justify-center">
-                  <svg className="h-4 w-4 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-                <div className="ml-4 flex-1">
-                  <h4 className="text-sm font-medium text-gray-900">商务数据可视化</h4>
-                  <div className="mt-1 w-full bg-gray-200 rounded-full h-2.5">
-                    <div className="bg-blue-600 h-2.5 rounded-full" style={{ width: '30%' }}></div>
-                  </div>
-                </div>
-                <div className="ml-4 text-sm text-gray-500">
-                  进行中
-                </div>
-              </div>
-              <div className="flex items-center">
-                <div className="flex-shrink-0 h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center">
-                  <svg className="h-4 w-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-                <div className="ml-4 flex-1">
-                  <h4 className="text-sm font-medium text-gray-900">Python数据分析</h4>
-                  <div className="mt-1 w-full bg-gray-200 rounded-full h-2.5">
-                    <div className="bg-blue-600 h-2.5 rounded-full" style={{ width: '0%' }}></div>
-                  </div>
-                </div>
-                <div className="ml-4 text-sm text-gray-500">
-                  未开始
-                </div>
-              </div>
-              <div className="flex items-center">
-                <div className="flex-shrink-0 h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center">
-                  <svg className="h-4 w-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-                <div className="ml-4 flex-1">
-                  <h4 className="text-sm font-medium text-gray-900">数据分析与决策</h4>
-                  <div className="mt-1 w-full bg-gray-200 rounded-full h-2.5">
-                    <div className="bg-blue-600 h-2.5 rounded-full" style={{ width: '0%' }}></div>
-                  </div>
-                </div>
-                <div className="ml-4 text-sm text-gray-500">
-                  未开始
-                </div>
-              </div>
+              )}
             </div>
           </div>
         </div>
@@ -193,67 +237,85 @@ const Profile: React.FC = () => {
         {/* 成就系统 */}
         <div className="mt-10 bg-white shadow overflow-hidden sm:rounded-lg">
           <div className="px-4 py-5 sm:px-6">
-            <h3 className="text-lg leading-6 font-medium text-gray-900">
-              成就系统
+            <h3 className="text-lg leading-6 font-medium text-gray-900 flex items-center">
+              <Trophy className="h-6 w-6 mr-2 text-yellow-600" />
+              成就系统 ({unlockedCount}/{totalAchievements})
             </h3>
           </div>
           <div className="border-t border-gray-200 px-4 py-4 sm:px-6">
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
-              {/* 成就徽章 1 */}
-              <div className="bg-gray-50 p-4 rounded-md text-center">
-                <div className="h-12 w-12 mx-auto bg-blue-100 rounded-full flex items-center justify-center">
-                  <svg className="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-                  </svg>
-                </div>
-                <h4 className="mt-2 text-sm font-medium text-gray-900">初学者</h4>
-                <p className="text-xs text-gray-500">完成第一门课程</p>
-              </div>
-              
-              {/* 成就徽章 2 */}
-              <div className="bg-gray-50 p-4 rounded-md text-center">
-                <div className="h-12 w-12 mx-auto bg-green-100 rounded-full flex items-center justify-center">
-                  <svg className="h-6 w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-                <h4 className="mt-2 text-sm font-medium text-gray-900">坚持不懈</h4>
-                <p className="text-xs text-gray-500">连续学习7天</p>
-              </div>
-              
-              {/* 成就徽章 3 */}
-              <div className="bg-gray-50 p-4 rounded-md text-center">
-                <div className="h-12 w-12 mx-auto bg-purple-100 rounded-full flex items-center justify-center">
-                  <svg className="h-6 w-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-                <h4 className="mt-2 text-sm font-medium text-gray-900">知识达人</h4>
-                <p className="text-xs text-gray-500">完成5个学习模块</p>
-              </div>
-              
-              {/* 成就徽章 4 */}
-              <div className="bg-gray-50 p-4 rounded-md text-center">
-                <div className="h-12 w-12 mx-auto bg-orange-100 rounded-full flex items-center justify-center">
-                  <svg className="h-6 w-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                  </svg>
-                </div>
-                <h4 className="mt-2 text-sm font-medium text-gray-900">社交达人</h4>
-                <p className="text-xs text-gray-500">在社区发布10个帖子</p>
-              </div>
-              
-              {/* 成就徽章 5 */}
-              <div className="bg-gray-50 p-4 rounded-md text-center">
-                <div className="h-12 w-12 mx-auto bg-red-100 rounded-full flex items-center justify-center">
-                  <svg className="h-6 w-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-                <h4 className="mt-2 text-sm font-medium text-gray-900">测试能手</h4>
-                <p className="text-xs text-gray-500">测评成绩达到90分以上</p>
-              </div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
+              {achievements.map((achievement) => {
+                const isUnlocked = unlockedAchievements.includes(achievement.id);
+                const colorMap = {
+                  blue: 'bg-blue-500',
+                  green: 'bg-green-500',
+                  purple: 'bg-purple-500',
+                  orange: 'bg-orange-500',
+                  yellow: 'bg-yellow-500',
+                  red: 'bg-red-500'
+                };
+                const textColorMap = {
+                  blue: 'text-blue-600',
+                  green: 'text-green-600',
+                  purple: 'text-purple-600',
+                  orange: 'text-orange-600',
+                  yellow: 'text-yellow-600',
+                  red: 'text-red-600'
+                };
+                const bgColorMap = {
+                  blue: 'bg-blue-100',
+                  green: 'bg-green-100',
+                  purple: 'bg-purple-100',
+                  orange: 'bg-orange-100',
+                  yellow: 'bg-yellow-100',
+                  red: 'bg-red-100'
+                };
+
+                return (
+                  <div
+                    key={achievement.id}
+                    className={`relative group p-4 rounded-xl transition-all duration-300 ${
+                      isUnlocked
+                        ? 'bg-gradient-to-br from-yellow-50 to-yellow-100 shadow-md hover:shadow-lg hover:-translate-y-1'
+                        : 'bg-gray-50 opacity-60'
+                    }`}
+                  >
+                    <div
+                      className={`h-16 w-16 mx-auto rounded-full flex items-center justify-center ${
+                        isUnlocked ? colorMap[achievement.color as keyof typeof colorMap] : 'bg-gray-300'
+                      }`}
+                    >
+                      <svg
+                        className={`h-8 w-8 ${isUnlocked ? 'text-white' : 'text-gray-500'}`}
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d={achievement.icon}
+                        />
+                      </svg>
+                    </div>
+                    <h4 className="mt-3 text-sm font-semibold text-gray-900 text-center">
+                      {achievement.title}
+                    </h4>
+                    <p className="mt-1 text-xs text-gray-600 text-center">
+                      {achievement.description}
+                    </p>
+                    {!isUnlocked && (
+                      <div className="absolute inset-0 flex items-center justify-center bg-gray-900 bg-opacity-75 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <div className="text-center text-white">
+                          <Trophy className="h-8 w-8 mx-auto mb-2" />
+                          <p className="text-sm font-medium">未解锁</p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>

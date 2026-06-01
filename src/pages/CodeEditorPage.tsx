@@ -1,22 +1,54 @@
 import React, { useState } from 'react';
 import CodeEditor from '../components/CodeEditor';
 import CodeResult from '../components/CodeResult';
-import { runCode } from '../services/codeRunService';
+import { runCode, RunCodeResult } from '../services/codeRunService';
+import { useFeedback } from '../contexts/FeedbackContext';
+import { useNetwork } from '../hooks/useNetwork';
+import { Loading } from '../components/Loading';
+import { AlertTriangle, RefreshCw } from 'lucide-react';
 
 const CodeEditorPage: React.FC = () => {
   const [output, setOutput] = useState('');
   const [error, setError] = useState('');
   const [isRunning, setIsRunning] = useState(false);
+  const [errorDetails, setErrorDetails] = useState<RunCodeResult['errorDetails'] | undefined>();
+  const { showSuccess, showError } = useFeedback();
+  const { isOnline } = useNetwork({ showNotification: false });
 
   const handleRunCode = async (code: string) => {
+    if (!isOnline) {
+      showError('网络未连接', '请检查您的网络连接后重试');
+      return;
+    }
+
     setIsRunning(true);
     setOutput('');
     setError('');
+    setErrorDetails(undefined);
 
-    const result = await runCode(code);
-    setOutput(result.output);
-    setError(result.error);
-    setIsRunning(false);
+    try {
+      const result = await runCode(code);
+
+      if (result.success) {
+        setOutput(result.output);
+        showSuccess('代码执行成功', '您的代码已成功运行');
+      } else {
+        setError(result.error);
+        setErrorDetails(result.errorDetails);
+      }
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : '执行代码时发生未知错误';
+      setError(errorMessage);
+      showError('执行失败', errorMessage);
+    } finally {
+      setIsRunning(false);
+    }
+  };
+
+  const handleRetry = (code: string) => {
+    if (!isRunning) {
+      handleRunCode(code);
+    }
   };
 
   const sampleCode = `# 示例1: 基本输出
@@ -72,6 +104,17 @@ print(f"标准差: {np.std(arr)}")`;
 
       {/* 页面内容 */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* 网络状态提示 */}
+        {!isOnline && (
+          <div className="mb-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg flex items-center">
+            <AlertTriangle className="h-5 w-5 text-yellow-600 mr-3" />
+            <div>
+              <p className="font-medium text-yellow-800">网络未连接</p>
+              <p className="text-sm text-yellow-700">请检查您的网络连接后再运行代码</p>
+            </div>
+          </div>
+        )}
+
         <div className="mb-6">
           <h2 className="text-2xl font-bold text-gray-900">代码编辑器</h2>
           <p className="mt-2 text-gray-600">
@@ -85,10 +128,13 @@ print(f"标准差: {np.std(arr)}")`;
             onRun={handleRunCode}
             height="500px"
           />
+          {isRunning && <Loading overlay text="正在执行代码..." />}
           <CodeResult
             output={output}
             error={error}
             isRunning={isRunning}
+            errorDetails={errorDetails}
+            onRetry={() => handleRetry(sampleCode)}
           />
         </div>
 

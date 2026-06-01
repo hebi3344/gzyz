@@ -1,19 +1,112 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { courses } from '../services/recommendationService';
-import { User, BookOpen, Search, ArrowRight } from 'lucide-react';
+import { User, BookOpen, Search, ArrowRight, Filter, X, Sparkles } from 'lucide-react';
+
+// 搜索高亮组件
+const HighlightText: React.FC<{ text: string; highlight: string }> = ({ text, highlight }) => {
+  if (!highlight.trim()) {
+    return <span>{text}</span>;
+  }
+  
+  const regex = new RegExp(`(${highlight.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+  const parts = text.split(regex);
+  
+  return (
+    <span>
+      {parts.map((part, index) => 
+        regex.test(part) ? (
+          <mark key={index} className="bg-yellow-200 text-secondary-900 px-0.5 rounded">
+            {part}
+          </mark>
+        ) : (
+          <span key={index}>{part}</span>
+        )
+      )}
+    </span>
+  );
+};
+
+// 防抖 Hook
+const useDebounce = (value: string, delay: number): string => {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+  
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+    
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [value, delay]);
+  
+  return debouncedValue;
+};
+
+// 获取所有分类
+const getAllCategories = () => {
+  const categories = [...new Set(courses.map(course => course.category))];
+  return ['全部', ...categories.sort()];
+};
 
 const Courses: React.FC = () => {
   const [selectedLevel, setSelectedLevel] = useState('all');
+  const [selectedCategory, setSelectedCategory] = useState('全部');
   const [searchTerm, setSearchTerm] = useState('');
-
-  const filteredCourses = courses.filter(course => {
-    const matchesLevel = selectedLevel === 'all' || course.level === selectedLevel;
-    const matchesSearch = course.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                          course.description.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesLevel && matchesSearch;
-  });
-
+  const [isSearching, setIsSearching] = useState(false);
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  
+  const debouncedSearchTerm = useDebounce(searchTerm, 300);
+  
+  // 过滤课程
+  const filteredCourses = useMemo(() => {
+    return courses.filter(course => {
+      const matchesLevel = selectedLevel === 'all' || course.level === selectedLevel;
+      const matchesCategory = selectedCategory === '全部' || course.category === selectedCategory;
+      const matchesSearch = debouncedSearchTerm.trim() === '' || 
+        course.title.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) || 
+        course.description.toLowerCase().includes(debouncedSearchTerm.toLowerCase());
+      return matchesLevel && matchesCategory && matchesSearch;
+    });
+  }, [selectedLevel, selectedCategory, debouncedSearchTerm]);
+  
+  // 搜索状态
+  useEffect(() => {
+    if (debouncedSearchTerm !== searchTerm) {
+      setIsSearching(true);
+      const timer = setTimeout(() => setIsSearching(false), 300);
+      return () => clearTimeout(timer);
+    }
+    setIsSearching(false);
+  }, [debouncedSearchTerm, searchTerm]);
+  
+  // 键盘快捷键：Ctrl+K 或 Cmd+K 聚焦搜索框
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        searchInputRef.current?.focus();
+      }
+      if (e.key === 'Escape') {
+        setSearchTerm('');
+        searchInputRef.current?.blur();
+      }
+    };
+    
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+  
+  // 清除筛选
+  const clearFilters = () => {
+    setSelectedLevel('all');
+    setSelectedCategory('全部');
+    setSearchTerm('');
+  };
+  
+  const hasActiveFilters = selectedLevel !== 'all' || selectedCategory !== '全部' || searchTerm.trim() !== '';
+  
   const getLevelText = (level: string) => {
     switch (level) {
       case 'beginner': return '初级';
@@ -22,7 +115,7 @@ const Courses: React.FC = () => {
       default: return '初级';
     }
   };
-
+  
   const getLevelColor = (level: string) => {
     switch (level) {
       case 'beginner': return 'bg-primary-100 text-primary-800';
@@ -31,6 +124,25 @@ const Courses: React.FC = () => {
       default: return 'bg-primary-100 text-primary-800';
     }
   };
+  
+  const getLevelIconColor = (level: string) => {
+    switch (level) {
+      case 'beginner': return 'text-primary-600';
+      case 'intermediate': return 'text-green-600';
+      case 'advanced': return 'text-purple-600';
+      default: return 'text-primary-600';
+    }
+  };
+  
+  const getLevelBgColor = (level: string) => {
+    switch (level) {
+      case 'beginner': return 'bg-primary-100';
+      case 'intermediate': return 'bg-green-100';
+      case 'advanced': return 'bg-purple-100';
+      default: return 'bg-primary-100';
+    }
+  };
+  
   return (
     <div className="min-h-screen bg-secondary-50">
       {/* 导航栏 */}
@@ -79,13 +191,64 @@ const Courses: React.FC = () => {
 
         {/* 课程筛选 */}
         <div className="mt-12 bg-white rounded-xl shadow-md overflow-hidden">
-          <div className="px-6 py-6 border-b border-secondary-200">
-            <h3 className="text-xl font-semibold text-secondary-900">
+          <div className="px-6 py-6 border-b border-secondary-200 flex items-center justify-between">
+            <h3 className="text-xl font-semibold text-secondary-900 flex items-center">
+              <Filter className="w-5 h-5 mr-2" />
               课程筛选
             </h3>
+            {hasActiveFilters && (
+              <button
+                onClick={clearFilters}
+                className="text-sm text-primary-600 hover:text-primary-700 flex items-center transition-colors duration-200"
+              >
+                <X className="w-4 h-4 mr-1" />
+                清除筛选
+              </button>
+            )}
           </div>
           <div className="border-t border-secondary-200 px-6 py-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {/* 搜索框 */}
+              <div className="lg:col-span-2">
+                <label htmlFor="search" className="block text-sm font-medium text-secondary-700 mb-2">
+                  搜索课程 <span className="text-xs text-secondary-400">(Ctrl+K)</span>
+                </label>
+                <div className="relative rounded-lg shadow-sm">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    {isSearching ? (
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-primary-600"></div>
+                    ) : (
+                      <Search className="h-5 w-5 text-secondary-400" />
+                    )}
+                  </div>
+                  <input
+                    type="text"
+                    name="search"
+                    id="search"
+                    ref={searchInputRef}
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 pr-10 py-3 sm:text-sm border-secondary-300 rounded-lg transition-all duration-200"
+                    placeholder="输入课程名称或描述关键词"
+                  />
+                  {searchTerm && (
+                    <button
+                      onClick={() => setSearchTerm('')}
+                      className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                    >
+                      <X className="h-5 w-5 text-secondary-400 hover:text-secondary-600 transition-colors duration-200" />
+                    </button>
+                  )}
+                </div>
+                {searchTerm && (
+                  <p className="mt-2 text-sm text-secondary-600">
+                    <Sparkles className="w-4 h-4 inline mr-1" />
+                    正在搜索: "{searchTerm}"
+                  </p>
+                )}
+              </div>
+              
+              {/* 难度等级 */}
               <div>
                 <label htmlFor="level" className="block text-sm font-medium text-secondary-700 mb-2">
                   难度等级
@@ -102,90 +265,151 @@ const Courses: React.FC = () => {
                   <option value="advanced">高级</option>
                 </select>
               </div>
+              
+              {/* 分类 */}
               <div>
                 <label htmlFor="category" className="block text-sm font-medium text-secondary-700 mb-2">
                   分类
                 </label>
                 <select
                   id="category"
+                  value={selectedCategory}
+                  onChange={(e) => setSelectedCategory(e.target.value)}
                   className="block w-full pl-3 pr-10 py-3 text-base border-secondary-300 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm rounded-lg transition-all duration-200"
                 >
-                  <option value="all">全部分类</option>
-                  <option value="基础">基础</option>
-                  <option value="编程">编程</option>
-                  <option value="统计">统计</option>
-                  <option value="可视化">可视化</option>
-                  <option value="机器学习">机器学习</option>
-                  <option value="项目">项目</option>
+                  {getAllCategories().map(category => (
+                    <option key={category} value={category}>{category}</option>
+                  ))}
                 </select>
               </div>
-              <div>
-                <label htmlFor="search" className="block text-sm font-medium text-secondary-700 mb-2">
-                  搜索课程
-                </label>
-                <div className="relative rounded-lg shadow-sm">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Search className="h-5 w-5 text-secondary-400" />
-                  </div>
-                  <input
-                    type="text"
-                    name="search"
-                    id="search"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 pr-3 py-3 sm:text-sm border-secondary-300 rounded-lg transition-all duration-200"
-                    placeholder="输入课程名称"
-                  />
+            </div>
+            
+            {/* 活跃筛选标签 */}
+            {hasActiveFilters && (
+              <div className="mt-4 pt-4 border-t border-secondary-200">
+                <div className="flex items-center flex-wrap gap-2">
+                  <span className="text-sm text-secondary-600">活跃筛选:</span>
+                  {searchTerm && (
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-primary-100 text-primary-800">
+                      搜索: "{searchTerm}"
+                      <button onClick={() => setSearchTerm('')} className="ml-2">
+                        <X className="w-3 h-3" />
+                      </button>
+                    </span>
+                  )}
+                  {selectedLevel !== 'all' && (
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                      {getLevelText(selectedLevel)}
+                      <button onClick={() => setSelectedLevel('all')} className="ml-2">
+                        <X className="w-3 h-3" />
+                      </button>
+                    </span>
+                  )}
+                  {selectedCategory !== '全部' && (
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+                      {selectedCategory}
+                      <button onClick={() => setSelectedCategory('全部')} className="ml-2">
+                        <X className="w-3 h-3" />
+                      </button>
+                    </span>
+                  )}
                 </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
 
         {/* 课程列表 */}
         <div className="mt-12">
-          <h3 className="text-xl font-semibold text-secondary-900 mb-8">
-            全部课程 ({filteredCourses.length})
-          </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredCourses.map((course) => (
-              <div key={course.id} className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 transform hover:-translate-y-1">
-                <div className="p-6">
-                  <div className="text-center">
-                    <div className={`h-16 w-16 mx-auto rounded-full flex items-center justify-center ${course.level === 'beginner' ? 'bg-primary-100' : course.level === 'intermediate' ? 'bg-green-100' : 'bg-purple-100'}`}>
-                      <BookOpen className={`h-8 w-8 ${course.level === 'beginner' ? 'text-primary-600' : course.level === 'intermediate' ? 'text-green-600' : 'text-purple-600'}`} />
-                    </div>
-                    <h3 className="mt-6 text-xl font-semibold text-secondary-900">{course.title}</h3>
-                    <p className="mt-3 text-secondary-600">
-                      {course.description}
-                    </p>
-                    <div className="mt-6 flex flex-wrap justify-center gap-2">
-                      <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getLevelColor(course.level)}`}>
-                        {getLevelText(course.level)}
-                      </span>
-                      <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-secondary-100 text-secondary-800">
-                        {course.category}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-                <div className="bg-secondary-50 px-6 py-4">
-                  <div className="flex items-center justify-between">
-                    <div className="text-sm text-secondary-600">
-                      预计学习时间: {course.estimatedTime}小时
-                    </div>
-                    <Link
-                      to={`/courses/${course.id}`}
-                      className="text-sm font-medium text-primary-600 hover:text-primary-700 flex items-center group transition-colors duration-200"
-                    >
-                      查看详情
-                      <ArrowRight className="ml-1 h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            ))}
+          <div className="flex items-center justify-between mb-8">
+            <h3 className="text-xl font-semibold text-secondary-900">
+              {searchTerm || hasActiveFilters ? '搜索结果' : '全部课程'} 
+              <span className="ml-2 text-lg font-normal text-secondary-600">
+                ({filteredCourses.length} {filteredCourses.length === 1 ? '个课程' : '个课程'})
+              </span>
+            </h3>
+            {(searchTerm || hasActiveFilters) && filteredCourses.length > 0 && (
+              <p className="text-sm text-secondary-600">
+                基于您的筛选条件找到 {filteredCourses.length} 个课程
+              </p>
+            )}
           </div>
+          
+          {/* 无结果提示 */}
+          {filteredCourses.length === 0 ? (
+            <div className="bg-white rounded-xl shadow-md p-12 text-center">
+              <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-secondary-100 mb-4">
+                <Search className="h-8 w-8 text-secondary-400" />
+              </div>
+              <h3 className="text-lg font-medium text-secondary-900 mb-2">
+                未找到匹配的课程
+              </h3>
+              <p className="text-secondary-600 mb-6">
+                尝试调整您的筛选条件或搜索关键词
+              </p>
+              <div className="flex flex-wrap justify-center gap-2 mb-6">
+                <span className="text-sm text-secondary-500">试试搜索:</span>
+                {['Python', '可视化', '机器学习', '统计分析'].map(suggestion => (
+                  <button
+                    key={suggestion}
+                    onClick={() => setSearchTerm(suggestion)}
+                    className="px-3 py-1 text-sm bg-secondary-100 text-secondary-700 rounded-full hover:bg-secondary-200 transition-colors duration-200"
+                  >
+                    {suggestion}
+                  </button>
+                ))}
+              </div>
+              <button
+                onClick={clearFilters}
+                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-primary-600 hover:bg-primary-700 transition-colors duration-200"
+              >
+                <X className="w-4 h-4 mr-2" />
+                清除所有筛选条件
+              </button>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+              {filteredCourses.map((course) => (
+                <div key={course.id} className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                  <div className="p-6">
+                    <div className="text-center">
+                      <div className={`h-16 w-16 mx-auto rounded-full flex items-center justify-center ${getLevelBgColor(course.level)}`}>
+                        <BookOpen className={`h-8 w-8 ${getLevelIconColor(course.level)}`} />
+                      </div>
+                      <h3 className="mt-6 text-xl font-semibold text-secondary-900">
+                        <HighlightText text={course.title} highlight={debouncedSearchTerm} />
+                      </h3>
+                      <p className="mt-3 text-secondary-600 text-sm">
+                        <HighlightText text={course.description} highlight={debouncedSearchTerm} />
+                      </p>
+                      <div className="mt-6 flex flex-wrap justify-center gap-2">
+                        <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getLevelColor(course.level)}`}>
+                          {getLevelText(course.level)}
+                        </span>
+                        <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-secondary-100 text-secondary-800">
+                          {course.category}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="bg-secondary-50 px-6 py-4">
+                    <div className="flex items-center justify-between">
+                      <div className="text-sm text-secondary-600">
+                        预计学习时间: {course.estimatedTime}小时
+                      </div>
+                      <Link
+                        to={`/courses/${course.id}`}
+                        className="text-sm font-medium text-primary-600 hover:text-primary-700 flex items-center group transition-colors duration-200"
+                      >
+                        查看详情
+                        <ArrowRight className="ml-1 h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 

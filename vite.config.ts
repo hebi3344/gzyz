@@ -7,6 +7,26 @@ import { traeBadgePlugin } from 'vite-plugin-trae-solo-badge';
 export default defineConfig({
   build: {
     sourcemap: 'hidden',
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+          'monaco-editor': ['@monaco-editor/react'],
+          'charts': ['chart.js', 'react-chartjs-2'],
+          'ui': ['lucide-react', 'clsx', 'tailwind-merge'],
+        },
+      },
+    },
+    chunkSizeWarningLimit: 500,
+    assetsInlineLimit: 4096,
+    cssCodeSplit: true,
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true,
+      },
+    },
   },
   server: {
     proxy: {
@@ -16,6 +36,7 @@ export default defineConfig({
         secure: false,
       },
     },
+    preload: true,
   },
   plugins: [
     react({
@@ -36,4 +57,7 @@ export default defineConfig({
     }), 
     tsconfigPaths()
   ],
+  optimizeDeps: {
+    include: ['react', 'react-dom', 'react-router-dom'],
+  },
 })

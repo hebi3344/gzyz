@@ -1,12 +1,15 @@
 import React from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { courses } from '../services/recommendationService';
+import { ChapterProgressBar } from '../components/ChapterProgressBar';
+import { useProgressStore } from '../store/useProgressStore';
+import { Trophy, Clock, TrendingUp } from 'lucide-react';
 
 const CourseDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const course = courses.find(c => c.id === id);
+  const { progress, getLearningTime, getOverallChapterCompletion } = useProgressStore();
   
-  // 如果课程不存在，显示404
   if (!course) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -23,6 +26,50 @@ const CourseDetail: React.FC = () => {
       </div>
     );
   }
+
+  const courseProgress = progress[course.id] || 0;
+  const learningMinutes = getLearningTime(course.id);
+  const chapterCompletion = getOverallChapterCompletion(course.id);
+
+  const chapters = [
+    {
+      id: 'chapter_1',
+      title: '第一章：课程介绍',
+      duration: '1小时',
+      sections: [
+        { id: '1_1', title: '1.1 课程概述' },
+        { id: '1_2', title: '1.2 学习目标' },
+      ]
+    },
+    {
+      id: 'chapter_2',
+      title: '第二章：核心内容',
+      duration: `${Math.floor(course.estimatedTime * 0.7)}小时`,
+      sections: [
+        { id: '2_1', title: '2.1 基础概念' },
+        { id: '2_2', title: '2.2 技术原理' },
+        { id: '2_3', title: '2.3 实践应用' },
+      ]
+    },
+    {
+      id: 'chapter_3',
+      title: '第三章：实践项目',
+      duration: `${Math.floor(course.estimatedTime * 0.2)}小时`,
+      sections: [
+        { id: '3_1', title: '3.1 项目概述' },
+        { id: '3_2', title: '3.2 项目实现' },
+      ]
+    },
+    {
+      id: 'chapter_4',
+      title: '第四章：总结与评估',
+      duration: `${Math.floor(course.estimatedTime * 0.1)}小时`,
+      sections: [
+        { id: '4_1', title: '4.1 课程总结' },
+        { id: '4_2', title: '4.2 评估测试' },
+      ]
+    }
+  ];
 
   const getLevelText = (level: string) => {
     switch (level) {
@@ -105,6 +152,42 @@ const CourseDetail: React.FC = () => {
                     {course.estimatedTime}小时
                   </span>
                 </div>
+                
+                {/* 学习进度统计 */}
+                {courseProgress > 0 && (
+                  <div className="mt-4 grid grid-cols-3 gap-4">
+                    <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-3">
+                      <div className="flex items-center">
+                        <TrendingUp className="h-5 w-5 text-blue-600 mr-2" />
+                        <div>
+                          <p className="text-xs text-blue-600 font-medium">课程进度</p>
+                          <p className="text-lg font-bold text-blue-900">{courseProgress}%</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg p-3">
+                      <div className="flex items-center">
+                        <Clock className="h-5 w-5 text-purple-600 mr-2" />
+                        <div>
+                          <p className="text-xs text-purple-600 font-medium">学习时长</p>
+                          <p className="text-lg font-bold text-purple-900">
+                            {Math.floor(learningMinutes / 60)}h {learningMinutes % 60}m
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-3">
+                      <div className="flex items-center">
+                        <Trophy className="h-5 w-5 text-green-600 mr-2" />
+                        <div>
+                          <p className="text-xs text-green-600 font-medium">章节完成</p>
+                          <p className="text-lg font-bold text-green-900">{chapterCompletion}%</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                
                 <p className="mt-4 text-gray-600">
                   {course.description}
                 </p>
@@ -120,6 +203,20 @@ const CourseDetail: React.FC = () => {
                   </button>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+
+        {/* 课程章节进度 */}
+        <div className="mt-10 bg-white shadow overflow-hidden sm:rounded-lg">
+          <div className="px-4 py-5 sm:px-6">
+            <h3 className="text-lg leading-6 font-medium text-gray-900">
+              课程章节进度
+            </h3>
+          </div>
+          <div className="border-t border-gray-200">
+            <div className="px-4 py-6 sm:px-6">
+              <ChapterProgressBar courseId={course.id} chapters={chapters} />
             </div>
           </div>
         </div>

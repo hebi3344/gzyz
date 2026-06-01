@@ -1,0 +1,9 @@
+{
+  "name": "data-analysis-api",
+  "version": "1.0.0",
+  "type": "module",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^5.2.1"
+  }
+}
