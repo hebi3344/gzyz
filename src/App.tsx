@@ -13,7 +13,6 @@ const Home = lazy(() => import("@/pages/Home"));
 const Courses = lazy(() => import("@/pages/Courses"));
 const CourseDetail = lazy(() => import("@/pages/CourseDetail"));
 const Learning = lazy(() => import("@/pages/Learning"));
-const Community = lazy(() => import("@/pages/Community"));
 const Profile = lazy(() => import("@/pages/Profile"));
 const LessonContent = lazy(() => import("@/pages/LessonContent"));
 const CodeEditorPage = lazy(() => import("@/pages/CodeEditorPage"));
@@ -58,7 +57,6 @@ function App() {
                 <Route path="/code-editor" element={<CodeEditorPage />} />
                 
                 {/* 需要登录的路由 */}
-                <Route path="/community" element={<ProtectedRoute><Community /></ProtectedRoute>} />
                 <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
               </Routes>
             </Suspense>

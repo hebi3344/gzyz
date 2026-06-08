@@ -325,7 +325,7 @@
 
 .interactive-bounce {
   @apply transform transition-all duration-200 ease-out cursor-pointer;
-  @apply hover:bounce-subtle active:scale-95;
+  @apply hover:scale-105 active:scale-95;
 }
 
 .ripple-effect {

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { getRecommendedCourses, getLearningPath } from '../services/recommendationService';
 import { useProgress } from '../hooks/useProgress';
-import { User, BookOpen, BarChart3, Users, ArrowRight } from 'lucide-react';
+import { User, BookOpen, BarChart3, ArrowRight } from 'lucide-react';
 
 const Home: React.FC = () => {
   const [recommendedCourses, setRecommendedCourses] = useState<any[]>([]);
@@ -38,9 +38,6 @@ const Home: React.FC = () => {
                 <a href="/learning" className="text-secondary-600 hover:text-primary-600 hover:border-primary-600 inline-flex items-center px-3 py-2 border-b-2 border-transparent text-sm font-medium transition-colors duration-200">
                   学习中心
                 </a>
-                <a href="/community" className="text-secondary-600 hover:text-primary-600 hover:border-primary-600 inline-flex items-center px-3 py-2 border-b-2 border-transparent text-sm font-medium transition-colors duration-200">
-                  社区中心
-                </a>
               </div>
             </div>
             <div className="flex items-center">
@@ -67,7 +64,7 @@ const Home: React.FC = () => {
               <a href="/courses" className="w-full sm:w-auto flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-lg text-primary-700 bg-white hover:bg-primary-50 md:py-4 md:text-lg md:px-10 shadow-lg transition-all duration-300 transform hover:scale-105">
                 浏览课程
               </a>
-              <a href="/learning" className="w-full sm:w-auto flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-primary-700 hover:bg-primary-800 md:py-4 md:text-lg md:px-10 shadow-lg transition-all duration-300 transform hover:scale-105">
+              <a href="/learning" className="w-full sm:w-auto flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-primary-700 hover:bg-primary-80 md:py-4 md:text-lg md:px-10 shadow-lg transition-all duration-300 transform hover:scale-105">
                 开始学习
               </a>
             </div>
@@ -78,7 +75,7 @@ const Home: React.FC = () => {
       {/* 特色功能 */}
       <div className="py-16 bg-white">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="bg-secondary-50 p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300">
               <div className="h-12 w-12 rounded-lg bg-primary-100 flex items-center justify-center mb-4">
                 <BookOpen className="h-6 w-6 text-primary-600" />
@@ -95,15 +92,6 @@ const Home: React.FC = () => {
               <h3 className="text-xl font-semibold text-secondary-900 mb-2">个性化学习路径</h3>
               <p className="text-secondary-600">
                 根据您的学习进度和兴趣，为您定制专属的学习计划和推荐课程
-              </p>
-            </div>
-            <div className="bg-secondary-50 p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300">
-              <div className="h-12 w-12 rounded-lg bg-primary-100 flex items-center justify-center mb-4">
-                <Users className="h-6 w-6 text-primary-600" />
-              </div>
-              <h3 className="text-xl font-semibold text-secondary-900 mb-2">活跃的学习社区</h3>
-              <p className="text-secondary-600">
-                与同学和导师交流学习心得，分享经验，共同进步
               </p>
             </div>
           </div>
@@ -306,7 +294,6 @@ const Home: React.FC = () => {
                 <li><a href="/" className="text-secondary-400 hover:text-white transition-colors duration-200">首页</a></li>
                 <li><a href="/courses" className="text-secondary-400 hover:text-white transition-colors duration-200">课程中心</a></li>
                 <li><a href="/learning" className="text-secondary-400 hover:text-white transition-colors duration-200">学习中心</a></li>
-                <li><a href="/community" className="text-secondary-400 hover:text-white transition-colors duration-200">社区中心</a></li>
                 <li><a href="/profile" className="text-secondary-400 hover:text-white transition-colors duration-200">个人资料</a></li>
               </ul>
             </div>

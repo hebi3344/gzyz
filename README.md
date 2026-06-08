@@ -89,7 +89,7 @@ npm run lint
 │   │   ├── LessonContent.tsx   # 课程内容
 │   │   ├── Learning.tsx       # 学习中心
 │   │   ├── Profile.tsx         # 个人中心
-│   │   └── Community.tsx       # 社区中心
+
 │   ├── services/        # 服务层
 │   │   ├── codeRunService.ts   # 代码运行服务
 │   │   ├── codeGradeService.ts # 代码评分服务

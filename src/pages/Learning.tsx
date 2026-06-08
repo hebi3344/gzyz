@@ -22,9 +22,6 @@ const Learning: React.FC = () => {
                 <a href="/learning" className="text-primary-600 border-primary-600 inline-flex items-center px-3 py-2 border-b-2 text-sm font-medium">
                   学习中心
                 </a>
-                <a href="/community" className="text-secondary-600 hover:text-primary-600 hover:border-primary-600 inline-flex items-center px-3 py-2 border-b-2 border-transparent text-sm font-medium transition-colors duration-200">
-                  社区中心
-                </a>
               </div>
             </div>
             <div className="flex items-center">
@@ -186,7 +183,6 @@ const Learning: React.FC = () => {
                 <li><a href="/" className="text-secondary-400 hover:text-white transition-colors duration-200">首页</a></li>
                 <li><a href="/courses" className="text-secondary-400 hover:text-white transition-colors duration-200">课程中心</a></li>
                 <li><a href="/learning" className="text-secondary-400 hover:text-white transition-colors duration-200">学习中心</a></li>
-                <li><a href="/community" className="text-secondary-400 hover:text-white transition-colors duration-200">社区中心</a></li>
                 <li><a href="/profile" className="text-secondary-400 hover:text-white transition-colors duration-200">个人资料</a></li>
               </ul>
             </div>
